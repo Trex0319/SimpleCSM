@@ -7,7 +7,7 @@
       <h1 class="h1 mb-4 text-center">Login</h1>
       <div class="card p-4">      
         <?php require "parts/error_box.php"; ?>
-        <form method="POST" action="auth/login">
+        <form method="POST" action="/auth/login">
           <div class="mb-2">
             <label for="email" class="visually-hidden">Email</label>
             <input
@@ -41,7 +41,7 @@
         <a href="/" class="text-decoration-none small"
           ><i class="bi bi-arrow-left-circle"></i> Go back</a
         >
-        <a href="signup" class="text-decoration-none small"
+        <a href="/signup" class="text-decoration-none small"
           >Don't have an account? Sign up here
           <i class="bi bi-arrow-right-circle"></i
         ></a>
