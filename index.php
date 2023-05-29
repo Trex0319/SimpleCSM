@@ -17,11 +17,20 @@
         case "users/add":
             require "includes/users/add.php";
             break;
+        case "users/changepwd":
+            require "includes/users/changepwd.php";
+            break;
         case 'dashboard': //condition
             require "pages/dashboard.php";
             break;
         case 'login': //condition
             require "pages/login.php";
+            break;
+        case "users/delete":
+            require "includes/users/delete.php";
+            break;
+        case "users/edit":
+            require "includes/users/edit.php";
             break;
         case 'logout': //condition
             require "pages/logout.php";
