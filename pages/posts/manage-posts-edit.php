@@ -1,5 +1,9 @@
 <?php
 
+    if ( !isUserLoggedIn() ) {
+      header("Location: /");
+      exit;
+    }
     // make sure the id parameter is available in the url
     if ( isset( $_GET['id'] ) ) {
       // load database

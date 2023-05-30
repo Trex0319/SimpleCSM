@@ -16,14 +16,14 @@
                 Manage Posts
               </h5>
               <div class="text-center mt-3">
-                <a href="manage-posts" class="btn btn-primary btn-sm"
+                <a href="/manage-posts" class="btn btn-primary btn-sm"
                   >Access</a
                 >
               </div>
             </div>
           </div>
         </div>
-        <?php if (isAdminOrEditor()) : ?>
+        <?php if (isAdmin()) : ?>
         <div class="col">
           <div class="card mb-2">
             <div class="card-body">
@@ -34,7 +34,7 @@
                 Manage Users
               </h5>
               <div class="text-center mt-3">
-                <a href="manage-users" class="btn btn-primary btn-sm"
+                <a href="/manage-users" class="btn btn-primary btn-sm"
                   >Access</a
                 >
               </div>

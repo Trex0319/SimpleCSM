@@ -1,15 +1,27 @@
 <?php
+if ( !isUserLoggedIn() ) {
+  header("Location: /");
+  exit;
+}
+$database = connectToDB();
+if ( ofEditorAndAdmin() ){
+  $sql = "SELECT * FROM posts";
+  $query = $database->prepare($sql);
+  $query->execute();
+  $posts = $query->fetchAll();
+}else{
+$sql = "SELECT * FROM posts where user = :user";
+$query = $database->prepare($sql);
+$query->execute(
+  [
+    'user' => $_SESSION["user"]["id"]
+  ]
+);
+$posts = $query->fetchAll();
+}
+  require "parts/header.php";
+?>
 
-    $database = connectToDB();
-
-    $sql = "SELECT * FROM posts";
-    $query = $database->prepare($sql);
-    $query->execute();
-
-    $posts = $query->fetchAll();
-
-        require 'parts/header.php';
-    ?>
     <div class="container mx-auto my-5" style="max-width: 700px;">
       <div class="d-flex justify-content-between align-items-center mb-2">
         <h1 class="h1">Manage Posts</h1>
@@ -35,24 +47,28 @@
             <tr >
             <th scope="row"><?= $post['id']; ?></th>
               <td><?= $post['title']; ?></td>
-              <td>
-              <?php
-                    switch( $post['status'] ) {
-                      case 'pending':
-                        echo '<span class="badge bg-warning">' . $post['status'] .'</span>';
-                        break;
-                      case 'publish':
-                        echo '<span class="badge bg-success">' . $post['status'] .'</span>';
-                        break;
-                    }
-                  ?>              
-                  </td>
+              <td><span class="<?php
+                if($post["status"] == "pending"){
+                  echo "badge bg-warning";
+                } else if($post["status"] == "publish"){
+                  echo "badge bg-success";
+                }
+                ?>">
+                <?= $post['status']; ?>
+              </span></td>
               <td class="text-end">
                 <div class="buttons">
                   <a
-                    href="post"
+                    href="post?id=<?= $post['id']; ?>"
                     target="_blank"
-                    class="btn btn-primary btn-sm me-2 disabled"
+                    class="btn btn-primary btn-sm me-2 
+                    <?php
+                    if($post["status"] == "pending"){
+                      echo "disabled";
+                    }else if($post["status"] == "publish"){
+                      echo " ";
+                    }
+                    ?>"
                     ><i class="bi bi-eye"></i
                   ></a>
                   <a
