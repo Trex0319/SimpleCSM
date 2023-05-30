@@ -23,6 +23,7 @@
             </div>
           </div>
         </div>
+        <?php if (isAdminOrEditor()) : ?>
         <div class="col">
           <div class="card mb-2">
             <div class="card-body">
@@ -40,6 +41,7 @@
             </div>
           </div>
         </div>
+        <?php endif; ?>
       </div>
       <div class="mt-4 text-center">
         <a href="/" class="btn btn-link btn-sm"
