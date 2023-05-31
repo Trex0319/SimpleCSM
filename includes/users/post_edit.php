@@ -1,5 +1,10 @@
 <?php
 
+    if ( !isUserLoggedIn() ) {
+        header("Location: /");
+        exit;
+    }
+
     // load the database
     $database = connectToDB();
 

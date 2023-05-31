@@ -48,7 +48,7 @@
           </div>
           <div class="mb-3">
             <label for="post-content" class="form-label">Content</label>
-            <textarea class="form-control" id="post-content" rows="10" name="content"> <?=$post['content']; ?></textarea>
+            <textarea class="form-control" id="post-content" rows="10" name="content"><?=$post['content']; ?></textarea>
           </div>
           <div class="mb-3">
             <label for="post-content" class="form-label">Status</label>
