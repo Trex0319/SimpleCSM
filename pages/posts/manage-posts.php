@@ -6,22 +6,36 @@
   }
 
 $database = connectToDB();
-  if ( ofEditorAndAdmin() ){
-    $sql = "SELECT * FROM posts";
-    $query = $database->prepare($sql);
-    $query->execute();
-    $posts = $query->fetchAll();
-  } else {
-      $sql = "SELECT * FROM posts where user = :user";
+
+    if ( isAdmin() || isEditor() ){
+      // * means get all the columns from the selected table
+      $sql = "SELECT 
+          posts.*, 
+          users.name AS user_name,
+          users.email AS user_email 
+          FROM posts 
+          JOIN users 
+          ON posts.user = users.id";
+      $query = $database->prepare($sql);
+      $query->execute();
+    } else {
+      $sql = "SELECT 
+      posts.id, 
+      posts.title, 
+      posts.status, 
+      users.name AS user_name 
+      FROM posts 
+      JOIN users 
+      ON posts.user = users.id 
+      where posts.user = :user";
       $query = $database->prepare($sql);
       $query->execute(
-        [
+      [
           'user' => $_SESSION["user"]["id"]
-        ]
+      ]
       );
-      
+    }
       $posts = $query->fetchAll();
-      }
 
   require "parts/header.php";
 ?>
@@ -41,9 +55,10 @@ $database = connectToDB();
           <thead>
             <tr>
               <th scope="col">ID</th>
-              <th scope="col" style="width: 40%;">Title</th>
+              <th scope="col" style="width: 30%;">Title</th>
+              <th scope="col" style="width: 30%;">Created By</th>
               <th scope="col">Status</th>
-              <th scope="col" class="text-end">Actions</th>
+              <th scope="col" style="width: 30%;" class="text-end">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -51,7 +66,9 @@ $database = connectToDB();
             <tr >
             <th scope="row"><?= $post['id']; ?></th>
               <td><?= $post['title']; ?></td>
-              <td><span class="<?php
+              <td><?= $post['user_name']; ?></td>
+              <td>
+                <span class="<?php
                 if($post["status"] == "pending"){
                   echo "badge bg-warning";
                 } else if($post["status"] == "publish"){

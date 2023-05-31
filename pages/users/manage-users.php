@@ -1,7 +1,7 @@
 <?php
 
       // check if the current user is an admin or not
-    if ( !isAdmin() ) {
+    if ( !ofEditorAndAdmin() ) {
       // if current user is not an admin, redirect to dashboard
       header("Location: /dashboard");
       exit;
@@ -35,7 +35,7 @@
               <th scope="col">Name</th>
               <th scope="col">Email</th>
               <th scope="col">Role</th>
-              <th scope="col" class="text-end">Actions</th>
+              <th scope="col" style="width: 30%;" class="text-end">Actions</th>
             </tr>
           </thead>
           <tbody>

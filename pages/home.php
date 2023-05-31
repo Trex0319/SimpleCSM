@@ -1,11 +1,14 @@
 <?php
 
-    $database = connectToDB();
+  // load data from database
+  $database = connectToDB();
 
-    $sql = "SELECT * FROM posts";
-    $query = $database->prepare($sql);
-    $query->execute();
-    $posts = $query->fetchAll();
+  $sql = "SELECT * FROM posts where status = 'publish' ORDER BY id DESC";
+  $query = $database->prepare($sql);
+  $query->execute();
+
+  // fetch the data from query
+  $posts = $query->fetchAll();
 
         require 'parts/header.php';
     ?>
@@ -24,7 +27,7 @@
       </div>
       <?php } ?>
       <div class="mt-4 d-flex justify-content-center gap-3">
-      <?php if ( isset( $_SESSION["user"] ) ) { ?>
+      <?php if ( isUserLoggedIn() ) { ?>
         <a href="/logout" class="btn btn-link btn-sm">Logout</a>
         <a href="/dashboard" class="btn btn-link btn-sm">dashboard</a>
         <?php } else { ?>

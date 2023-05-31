@@ -35,7 +35,7 @@
     }
 
     function ofEditorAndAdmin(){
-        return isEditor() || isAdmin() ? true : false;
+        return isAdmin() || isEditor() ? true : false;
     }
 
     function isUserLoggedIn(){

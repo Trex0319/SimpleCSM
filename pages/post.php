@@ -17,8 +17,10 @@ if ( isset( $_GET['id'] ) ) {
 ?>
     <div class="container mx-auto my-5" style="max-width: 500px;">
       <h1 class="h1 mb-4 text-center"><?= $posts['title']; ?></h1>
-      <p><?= $posts['content']; ?></p>
-      <div class="text-center mt-3">
+      <?php  
+          echo nl2br( $posts['content'] );
+        ?>      
+        <div class="text-center mt-3">
         <a href="/dashboard" class="btn btn-link btn-sm"
           ><i class="bi bi-arrow-left"></i> Back</a
         >
