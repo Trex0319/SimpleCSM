@@ -1,24 +1,28 @@
 <?php
-if ( !isUserLoggedIn() ) {
-  header("Location: /");
-  exit;
-}
+
+  if ( !isUserLoggedIn() ) {
+    header("Location: /");
+    exit;
+  }
+
 $database = connectToDB();
-if ( ofEditorAndAdmin() ){
-  $sql = "SELECT * FROM posts";
-  $query = $database->prepare($sql);
-  $query->execute();
-  $posts = $query->fetchAll();
-}else{
-$sql = "SELECT * FROM posts where user = :user";
-$query = $database->prepare($sql);
-$query->execute(
-  [
-    'user' => $_SESSION["user"]["id"]
-  ]
-);
-$posts = $query->fetchAll();
-}
+  if ( ofEditorAndAdmin() ){
+    $sql = "SELECT * FROM posts";
+    $query = $database->prepare($sql);
+    $query->execute();
+    $posts = $query->fetchAll();
+  } else {
+      $sql = "SELECT * FROM posts where user = :user";
+      $query = $database->prepare($sql);
+      $query->execute(
+        [
+          'user' => $_SESSION["user"]["id"]
+        ]
+      );
+      
+      $posts = $query->fetchAll();
+      }
+
   require "parts/header.php";
 ?>
 
