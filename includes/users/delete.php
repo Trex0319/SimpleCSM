@@ -1,5 +1,12 @@
 <?php
 
+    // check if the current user is an admin or not
+    if ( !Auth::isAdmin() ) {
+        // if current user is not an admin, redirect to dashboard
+        header("Location: /dashboard");
+        exit;
+    }
+
     // load the database
     $database = connectToDB();
 
@@ -29,7 +36,7 @@
     ]);
 
     // set success message
-    $_SESSION["success"] = "User has been deleted.";
+    $_SESSION["success"] = "user has been deleted.";
 
     // redirect
     header("Location: /manage-users");

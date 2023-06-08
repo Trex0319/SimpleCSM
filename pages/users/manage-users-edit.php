@@ -1,7 +1,7 @@
 <?php
 
-        // check if the current user is an admin or not
-    if ( !ofEditorAndAdmin() ) {
+    // check if the current user is an admin or not
+    if ( !Auth::isAdmin() ) {
       // if current user is not an admin, redirect to dashboard
       header("Location: /dashboard");
       exit;
@@ -37,15 +37,15 @@
 
     require "parts/header.php";
 ?>
-
     <div class="container mx-auto my-5" style="max-width: 700px;">
       <div class="d-flex justify-content-between align-items-center mb-2">
         <h1 class="h1">Edit User</h1>
       </div>
       <div class="card mb-2 p-4">
-      <form method="POST"
+        <form
+          method="POST"
           action="/users/edit">
-          <?php require "parts/error_box.php"; ?>
+          <?php require "parts/message_error.php"; ?>
           <div class="mb-3">
             <div class="row">
               <div class="col">
@@ -62,7 +62,11 @@
             <label for="role" class="form-label">Role</label>
             <select class="form-control" id="role" name="role">
               <option value="">Select an option</option>
-              <option value="user" <?= $user['role'] === 'user' ? 'selected' : ''; ?>>User</option>
+              <option value="user" <?php
+                if ( $user['role'] === 'user' ) {
+                  echo 'selected';
+                }
+              ?>>User</option>
               <option value="editor" <?= $user['role'] === 'editor' ? 'selected' : ''; ?>>Editor</option>
               <option value="admin" <?=  $user['role'] === 'admin' ? 'selected' : ''; ?>>Admin</option>
             </select>
@@ -74,12 +78,11 @@
         </form>
       </div>
       <div class="text-center">
-        <a href="manage-users" class="btn btn-link btn-sm"
+        <a href="/manage-users" class="btn btn-link btn-sm"
           ><i class="bi bi-arrow-left"></i> Back to Users</a
         >
       </div>
     </div>
 
-    <?php
-
-require 'parts/footer.php';
+<?php
+  require "parts/footer.php";

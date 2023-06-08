@@ -1,33 +1,51 @@
 <?php
     session_start();
+
     // require all the functions files
-    require "includes/function.php";
+    require "includes/class-db.php";
+    require "includes/class-auth.php";
+    require "includes/class-user.php";
+    
+    require "includes/class-comment.php";
+    
+    // require "includes/functions.php";
+
     // your website path
     // parse_url will remove all the query string starting from the ?
     $path = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
     // remove / using trim()
     $path = trim( $path, '/');
+
     switch ($path) {
         case 'auth/login':
-            require "includes/auth/login.php";
+            Auth::login();
             break;
         case 'auth/signup':
-            require "includes/auth/signup.php";
-            break;
-        case 'users/post_delete':
-            require "includes/users/post_delete.php";
+            Auth::signup();
             break;
         case "users/add":
-            require "includes/users/add.php";
+            User::add();
             break;
-        case "users/post_add":
-            require "includes/users/post_add.php";
-            break;
-        case "users/post_edit":
-            require "includes/users/post_edit.php";
+        case "users/edit":
+            User::edit();
             break;
         case "users/changepwd":
-            require "includes/users/changepwd.php";
+            User::changepwd();
+            break;
+        case "users/delete":
+            User::delete();
+            break;
+        case "posts/add":
+            require "includes/posts/add.php";
+            break;
+        case "posts/edit":
+            require "includes/posts/edit.php";
+            break;
+        case "posts/delete":
+            require "includes/posts/delete.php";
+            break;
+        case "comments/add":
+            require "includes/comments/add.php";
             break;
         case 'dashboard': //condition
             require "pages/dashboard.php";
@@ -35,14 +53,8 @@
         case 'login': //condition
             require "pages/login.php";
             break;
-        case "users/delete":
-            require "includes/users/delete.php";
-            break;
-        case "users/edit":
-            require "includes/users/edit.php";
-            break;
         case 'logout': //condition
-            require "pages/logout.php";
+            Auth::logout();
             break;
         case 'manage-posts': //condition
             require "pages/posts/manage-posts.php";
@@ -76,3 +88,4 @@
             require "pages/home.php";
             break;
     }
+?>

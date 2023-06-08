@@ -1,10 +1,10 @@
 <?php
 
-     // check if the current user is an admin or not
-    if ( !isAdminOrEditor() ) {
-      // if current user is not an admin, redirect to dashboard
-      header("Location: /dashboard");
-      exit;
+    // check if the current user is an admin or not
+    if ( !Auth::isAdmin() ) {
+        // if current user is not an admin, redirect to dashboard
+        header("Location: /dashboard");
+        exit;
     }
 
     // load database
@@ -65,3 +65,4 @@
         exit;
 
     }
+

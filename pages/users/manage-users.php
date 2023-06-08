@@ -1,22 +1,22 @@
 <?php
 
-      // check if the current user is an admin or not
-    if ( !ofEditorAndAdmin() ) {
-      // if current user is not an admin, redirect to dashboard
-      header("Location: /dashboard");
-      exit;
-    }
+  // check if the current user is an admin or not
+  if ( !Auth::isAdmin() ) {
+    // if current user is not an admin, redirect to dashboard
+    header("Location: /dashboard");
+    exit;
+  }
 
-    $database = connectToDB();
+  // load data from database
+  $db = new DB();
 
-    $sql = "SELECT * FROM users";
-    $query = $database->prepare($sql);
-    $query->execute();
+  // get all the users
+  $users = $db->fetchAll(
+    "SELECT * FROM users"
+  );
 
-    $users = $query->fetchAll();
-
-        require 'parts/header.php';
-    ?>
+  require "parts/header.php";
+?>
     <div class="container mx-auto my-5" style="max-width: 700px;">
       <div class="d-flex justify-content-between align-items-center mb-2">
         <h1 class="h1">Manage Users</h1>
@@ -35,12 +35,13 @@
               <th scope="col">Name</th>
               <th scope="col">Email</th>
               <th scope="col">Role</th>
-              <th scope="col" style="width: 30%;" class="text-end">Actions</th>
+              <th scope="col" class="text-end">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <?php foreach ($users as $user) : ?>
-            <tr class="<?php
+          <!-- display out all the users using foreach -->
+             <?php foreach ($users as $user) { ?>
+              <tr class="<?php
                 if ( 
                   isset( $_SESSION['new_user_email'] ) && 
                   $_SESSION['new_user_email'] == $user['email'] ) {
@@ -51,20 +52,18 @@
               <th scope="row"><?= $user['id']; ?></th>
               <td><?= $user['name']; ?></td>
               <td><?= $user['email']; ?></td>
-              <td>              
-                <?php
-                  switch( $user['role'] ) {
-                    case 'admin':
-                      echo '<span class="badge bg-primary">' . $user['role'] .'</span>';
-                      break;
-                    case 'editor':
-                      echo '<span class="badge bg-info">' . $user['role'] .'</span>';
-                      break;
-                    case 'user':
-                      echo '<span class="badge bg-success">' . $user['role'] .'</span>';
-                      break;
-                  }
-                ?></td>
+              <td>
+                <span class="
+                <?php 
+                if($user["role"] == "user"){
+                  echo "badge bg-success";
+                } else if($user["role"] == "editor"){
+                  echo "badge bg-info";
+                } else if($user["role"] == "admin"){
+                  echo "badge bg-primary";
+                }
+                ?>"><?= $user['role']; ?></span>
+              </td>
               <td class="text-end">
                 <div class="buttons">
                   <a
@@ -95,7 +94,7 @@
                           You're currently deleting <?= $user['name']; ?>
                         </div>
                         <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                           <!-- 
                             Delete Form 
                             1. add action
@@ -104,17 +103,16 @@
                           -->
                           <form method= "POST" action="/users/delete">
                             <input type="hidden" name="id" value= "<?= $user['id']; ?>" />
-                            <button type="submit" class="btn btn-danger">Yes</button>
+                            <button type="submit" class="btn btn-danger">Yes, please delete</button>
                           </form>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                </div>
               </td>
             </tr>
-            <?php endforeach ?>
+            <?php } ?>
           </tbody>
         </table>
       </div>
@@ -125,6 +123,5 @@
       </div>
     </div>
 
-    <?php
-
-require 'parts/footer.php';
+<?php
+  require "parts/footer.php";

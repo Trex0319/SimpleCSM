@@ -1,11 +1,11 @@
 <?php
 
-    // check if the current user is an admin or not
-    if ( !ofEditorAndAdmin() ) {
-      // if current user is not an admin, redirect to dashboard
-      header("Location: /dashboard");
-      exit;
-    }
+  // check if the current user is an admin or not
+  if ( !Auth::isAdmin() ) {
+    // if current user is not an admin, redirect to dashboard
+    header("Location: /dashboard");
+    exit;
+  }
 
   require "parts/header.php";
 ?>
@@ -18,7 +18,7 @@
           method="POST"
           action="users/add"
           >
-          <?php require "parts/error_box.php";?>
+          <?php require "parts/message_error.php";?>
           <div class="mb-3">
             <div class="row">
               <div class="col">
