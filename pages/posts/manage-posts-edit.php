@@ -6,37 +6,7 @@
     exit;
   }
 
-if ( isset( $_GET['id'] ) ) {
-
-   $database = connectToDB();
-
-   $sql = "SELECT 
-    posts.*,
-    users.name 
-    FROM posts 
-    JOIN users
-    ON posts.modified_by = users.id
-    WHERE posts.id = :id";
-    //  $sql = "SELECT * FROM posts WHERE id = :id";
-   $query = $database->prepare( $sql );
-   $query->execute([
-     'id' => $_GET['id']
-   ]);
-
-   // fetch
-   $post = $query->fetch();
-
-   if ( !$post ) {
-    // if post don't exists, then we redirect back to manage-posts
-    header("Location: /manage-posts");
-    exit;
-  }
-
-} else {
-  // if $_GET['id'] is not available, then redirect the user back to manage-users
-  header("Location: /manage-posts");
-  exit;
-}
+  $post = Post::getPostByID();
    
   require "parts/header.php";
 
@@ -46,7 +16,7 @@ if ( isset( $_GET['id'] ) ) {
         <h1 class="h1">Edit Post</h1>
       </div>
       <div class="card mb-2 p-4">
-        <?php require "parts/message_error.php";?>
+        <?php require "parts/error_box.php";?>
         <form method="POST" action="posts/edit">
           <div class="mb-3">
             <label for="post-title" class="form-label">Title</label>
@@ -72,17 +42,9 @@ if ( isset( $_GET['id'] ) ) {
           <div class="mb-3">
             Last modified by: 
               <?php 
-                // $sql = "SELECT * FROM users where id = :id";
-                // $query = $database->prepare( $sql );
-                // $query->execute([
-                //   'id' => $post["modified_by"]
-                // ]);
-                // $user = $query->fetch();
-                // echo $user["name"];
 
-                echo $post["name"];
+                echo $post["title"];
               ?> 
-              on ( <?= $post["modified_at"]; ?> )
           </div>
           <div class="text-end">
           <input type="hidden" name="id" value="<?= $post['id']; ?>" />

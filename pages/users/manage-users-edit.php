@@ -7,33 +7,7 @@
       exit;
     }
 
-    // make sure the id parameter is available in the url
-    if ( isset( $_GET['id'] ) ) {
-      // load database
-      $database = connectToDB();
-
-      // load the user data based on the id
-      $sql = "SELECT * FROM users WHERE id = :id";
-      $query = $database->prepare( $sql );
-      $query->execute([
-        'id' => $_GET['id']
-      ]);
-
-      // fetch
-      $user = $query->fetch();
-
-      // make sure user data is found in database
-      if ( !$user ) {
-        // if user don't exists, then we redirect back to manage-users
-        header("Location: /manage-users");
-        exit;
-      }
-
-    } else {
-      // if $_GET['id'] is not available, then redirect the user back to manage-users
-      header("Location: /manage-users");
-      exit;
-    }
+    $user = User::getUserByID();
 
     require "parts/header.php";
 ?>
@@ -45,7 +19,7 @@
         <form
           method="POST"
           action="/users/edit">
-          <?php require "parts/message_error.php"; ?>
+          <?php require "parts/error_box.php"; ?>
           <div class="mb-3">
             <div class="row">
               <div class="col">

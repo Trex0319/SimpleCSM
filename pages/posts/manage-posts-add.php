@@ -7,6 +7,8 @@
       exit;
   }
 
+  $post = Post::getPostByID();
+
   require "parts/header.php";
 ?>
     <div class="container mx-auto my-5" style="max-width: 700px;">
@@ -15,7 +17,7 @@
       </div>
       <div class="card mb-2 p-4">
         <form method="POST" action="posts/add">
-        <?php require "parts/message_error.php";?>
+        <?php require "parts/error_box.php";?>
           <div class="mb-3">
             <label for="post-title" class="form-label">Title</label>
             <input type="text" class="form-control" id="post-title" name="title"/>

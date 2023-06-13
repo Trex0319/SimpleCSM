@@ -22,6 +22,18 @@
             </form>
         </div>
     </div>
+    <div
+          class="d-flex justify-content-between align-items-center gap-3 mx-auto pt-3"
+          style="max-width: 500px;"
+        >
+          <a href="/" class="text-decoration-none small"
+            ><i class="bi bi-arrow-left-circle"></i> Go back</a
+          >
+          <a href="/signup" class="text-decoration-none small"
+            >Don't have an account? Sign up here
+            <i class="bi bi-arrow-right-circle"></i
+          ></a>
+        </div>
   <?php
 
   require "parts/footer.php";

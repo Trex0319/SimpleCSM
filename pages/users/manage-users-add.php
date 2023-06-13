@@ -18,7 +18,7 @@
           method="POST"
           action="users/add"
           >
-          <?php require "parts/message_error.php";?>
+          <?php require "parts/error_box.php";?>
           <div class="mb-3">
             <div class="row">
               <div class="col">

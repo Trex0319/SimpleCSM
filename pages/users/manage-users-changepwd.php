@@ -7,29 +7,7 @@
     exit;
   }
 
-  // make sure the id parameter in the url is belongs to a valid user in the database
-  if ( isset( $_GET['id'] ) ) {
-
-    $database = connectToDB();
-
-    $sql = "SELECT * FROM users WHERE id = :id";
-    $query = $database->prepare( $sql );
-    $query->execute([
-        'id' => $_GET['id']
-    ]);
-
-    $user = $query->fetch();
-
-    // if is not a valid user, redirect back to /manage-users
-    if (!$user) {
-      header("Location:/manage-users");
-      exit;
-    }
-
-  } else {
-    header("Location: /manage-users");
-    exit;
-  }
+  $user = User::getUserByID( $_GET['id'] );
 
   require "parts/header.php";
 ?>
@@ -47,7 +25,7 @@
           5. add the error message
         -->
         <form method="POST" action="users/changepwd">
-          <?php require "parts/message_error.php";?>
+          <?php require "parts/error_box.php";?>
           <div class="mb-3">
             <div class="row">
               <div class="col">

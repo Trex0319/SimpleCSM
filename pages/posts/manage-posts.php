@@ -1,46 +1,11 @@
 <?php
 
-    // make sure the user is logged in
-    if ( !Auth::isUserLoggedIn() ) {
-        header("Location: /");
-        exit;
-    }
-
-    // load data from database
-    $database = connectToDB();
-
-    if ( isAdmin() || isEditor() ){
-        // * means get all the columns from the selected table
-        $sql = "SELECT 
-            posts.*, 
-            users.name AS user_name,
-            users.email AS user_email 
-            FROM posts 
-            JOIN users 
-            ON posts.user_id = users.id";
-        $query = $database->prepare($sql);
-        $query->execute();
-    } else {
-        $sql = "SELECT 
-        posts.id, 
-        posts.title, 
-        posts.status, 
-        users.name AS user_name,
-        users.email AS user_email  
-        FROM posts 
-        JOIN users 
-        ON posts.user_id = users.id 
-        where posts.user_id = :user_id";
-        $query = $database->prepare($sql);
-        $query->execute(
-        [
-            'user_id' => $_SESSION["user"]["id"]
-        ]
-        );
-    }
-
-    // fetch the data from query
-    $posts = $query->fetchAll();
+if ( !Auth::isUserLoggedIn() ) {
+    header("Location: /");
+    exit;
+  }
+  
+  $posts = Post::getPostsByUserRole();
 
     require "parts/header.php";
 ?>
@@ -60,59 +25,49 @@
                 <tr>
                     <th scope="col">ID</th>
                     <th scope="col" style="width: 40%;">Title</th>
-                    <th scope="col">Comments Num</th>
                     <th scope="col">Created By</th>
                     <th scope="col">Status</th>
                     <th scope="col" style="width: 25%;" class="text-end">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($posts as $post) { 
-                        // load the comments from database
-                        $sql = "SELECT
-                        comments.*,
-                        users.name
-                        FROM comments
-                        JOIN users
-                        ON comments.user_id = users.id
-                        WHERE post_id = :post_id";
-                        $query = $database->prepare($sql);
-                        $query->execute([
-                            "post_id" => $post["id"]
-                        ]);
-
-                        $comments = $query->fetchAll();  
-                    ?>
-                    <tr>
-                        <th scope="row"><?= $post['id']; ?></th>
-                        <td><?= $post['title']; ?><span class="badge bg-success ms-1"><?= count( $comments ); ?></span></td>
-                        <td>
-                            <?php
-                                // foreach ($comments as $comment) {
-                                //     echo $comment['comments']. '<br />';
-                                // }
-                                echo count( $comments );
-                            ?>
-                        </td>
-                        <td><?= $post['user_name']; ?> <?= $post['user_email']; ?></td>
-                        <td>
-                <span class="
-                <?php
-                if($post["status"] == "pending"){
-                    echo "badge bg-warning";
-                } else if($post['status'] == "publish"){
-                    echo "badge bg-success";
+                <?php foreach ($posts as $post) { ?>
+                    <tr class="<?php
+                if ( 
+                  isset( $_SESSION['new_post'] ) && 
+                  $_SESSION['new_post'] == $post['title'] ) {
+                    echo "table-success";
+                    unset( $_SESSION['new_post'] );
                 }
-                ?>"><?= $post['status']; ?></span>
-                        </td>
-                        <td class="text-end">
-                            <div class="buttons">
-                                <a
-                                    href="/post?id=<?= $post['id']; ?>"
-                                    target="_blank"
-                                    class="btn btn-primary btn-sm me-2 <?= $post['status'] === 'pending' ? 'disabled' : ''?>"
-                                ><i class="bi bi-eye"></i
-                                    ></a>
+              ?>">
+              <th scope="row"><?= $post['id'] ?></th>
+              <td><?= $post['title'] ?></td>
+              <td><?= $post['user_name']; ?></td>
+              <td><span class="<?php 
+                if($post["status"] == "pending"){
+                  echo "badge bg-warning";
+                } else if($post["status"] == "publish"){
+                  echo "badge bg-success";
+                }
+                ?>">
+                <?= $post['status']; ?>
+              </span></td>
+              
+              <td class="text-end">
+                <div class="buttons">
+                  <a
+                    href="/post?id=<?= $post['id']; ?>"
+                    target="_blank"
+                    class="btn btn-primary btn-sm me-2 
+                    <?php 
+                    if($post["status"] == "pending"){
+                      echo "disabled";
+                    }else if($post["status"] == "publish"){
+                      echo " ";
+                    }
+                    ?>"
+                    ><i class="bi bi-eye"></i
+                  ></a>
                                 <a
                                         href="/manage-posts-edit?id=<?= $post['id']; ?>"
                                         class="btn btn-secondary btn-sm me-2"

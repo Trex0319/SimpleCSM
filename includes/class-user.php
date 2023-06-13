@@ -5,12 +5,39 @@ class User
 
     public static function getUsers()
     {
-
+        $database = new DB();
+        return $database->fetchAll(
+            "SELECT * FROM users");
+      
     }
 
-    public static function getUserByID( $user_id )
+    public static function getUserByID()
     {
-
+     // make sure the id parameter is available in the url
+     if ( isset( $_GET['id'] ) ) {
+        // load database
+        $database = new DB();
+  
+        // load the user data based on the id
+        return $database->fetch(
+        "SELECT * FROM users WHERE id = :id",
+          [
+            'id' => $_GET['id']
+          ]
+          );
+  
+        // make sure user data is found in database
+        if ( !Auth::isUserLoggedIn() ) {
+          // if user don't exists, then we redirect back to manage-users
+          header("Location: /manage-users");
+          exit;
+        }
+  
+      } else {
+        // if $_GET['id'] is not available, then redirect the user back to manage-users
+        header("Location: /manage-users");
+        exit;
+      }
     }
 
     public static function add()
@@ -56,6 +83,7 @@ class User
         if( isset ($error)){
             $_SESSION['error'] = $error;
             header("Location: /manage-users-add");    
+            exit;
         } 
             
         // if no error found, process to account creation

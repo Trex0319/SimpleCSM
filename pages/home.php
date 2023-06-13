@@ -10,13 +10,7 @@
 
   // fetch the data from query
   // $posts = $query->fetchAll();
-
-  $database = new DB();
-  $posts = $database->fetchAll(
-    "SELECT * FROM posts 
-    WHERE status = 'publish'
-    ORDER BY id DESC"
-  );
+  $posts = Post::getPublishPosts();
 
   require "parts/header.php";
 ?>

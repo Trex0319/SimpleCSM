@@ -7,13 +7,7 @@
     exit;
   }
 
-  // load data from database
-  $db = new DB();
-
-  // get all the users
-  $users = $db->fetchAll(
-    "SELECT * FROM users"
-  );
+  $users = User::getUsers();
 
   require "parts/header.php";
 ?>

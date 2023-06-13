@@ -5,7 +5,7 @@
     require "includes/class-db.php";
     require "includes/class-auth.php";
     require "includes/class-user.php";
-    
+    require "includes/class-post.php";
     require "includes/class-comment.php";
     
     // require "includes/functions.php";
@@ -36,16 +36,16 @@
             User::delete();
             break;
         case "posts/add":
-            require "includes/posts/add.php";
+            Post::add();
             break;
         case "posts/edit":
-            require "includes/posts/edit.php";
+            Post::edit();
             break;
         case "posts/delete":
-            require "includes/posts/delete.php";
+            Post::delete();
             break;
         case "comments/add":
-            require "includes/comments/add.php";
+            Comment::add();
             break;
         case 'dashboard': //condition
             require "pages/dashboard.php";

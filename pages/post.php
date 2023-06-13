@@ -1,31 +1,6 @@
 <?php
 
-    // make sure there is an id query string in the url
-    if ( isset( $_GET['id'] ) ) {
-
-        $database = connectToDB();
-
-        // make sure the post is published
-        $sql = "SELECT * FROM posts WHERE id = :id AND status = 'publish'";
-        $query = $database->prepare( $sql );
-        $query->execute([
-            'id' => $_GET['id']
-        ]);
-
-        // fetch
-        $post = $query->fetch();
-
-        if ( !$post ) {
-            // if post don't exists, then we redirect back to home
-            header("Location: /");
-            exit;
-        }
-
-    } else {
-        // if $_GET['id'] is not available, then redirect the user back to home
-        header("Location: /");
-        exit;
-    }
+    $post = Post::getPostByID();
 
     require "parts/header.php";
 ?>
@@ -51,21 +26,9 @@
         <div class="mt-3">
             <h4>Comments</h4>
             <?php
-                // load the comments from database
-                $sql = "SELECT
-                    comments.*,
-                    users.name
-                    FROM comments
-                    JOIN users
-                    ON comments.user_id = users.id
-                    WHERE post_id = :post_id ORDER BY id DESC";
-                $query = $database->prepare($sql);
-                $query->execute([
-                    "post_id" => $post["id"]
-                ]);
-
-                $comments = $query->fetchAll();
-
+                
+                $comments = Comment::getCommentsByPostID( $post["id"]);
+                
                 foreach ($comments as $comment) :
             ?>
             <div class="card mt-2 <?php echo ( $comment["user_id"] === $_SESSION['user']['id'] ? "bg-info" : '' ); ?>">
@@ -75,7 +38,7 @@
                 </div>
             </div>
             <?php endforeach; ?>
-            <?php if ( Auth::isUserLoggedIn() ) : ?>
+            <?php if ( Auth::isUserLoggedIn($post["id"]) ) : ?>
             <form
                 action="/comments/add"
                 method="POST"    
